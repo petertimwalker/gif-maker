@@ -1,5 +1,4 @@
 import Head from "next/head";
-import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import styles from "@/styles/Home.module.css";
 
@@ -7,10 +6,10 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Kapwing Interview</title>
+        <title>Gif Maker — Kapwing Interview</title>
         <meta
           name="description"
-          content="This website contains information, code, and pages that relate to interview projects at Kapwing. Thank you for taking the time to apply."
+          content="This gif maker handles uploading multiple images, allows the user to preview the images playing one after another, and returns the a completed GIF."
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link
@@ -21,7 +20,7 @@ export default function Home() {
       <main className={styles.main}>
         <Navbar />
         <div className={styles.body}>
-          <h1 className={styles.header}>Interviewing at Kapwing</h1>
+          <h1 className={styles.header}>GIF Maker</h1>
         </div>
       </main>
     </>
