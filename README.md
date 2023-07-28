@@ -1,6 +1,8 @@
+## Kapwing Interview
+
 This repo contains the code for the Kapwing interview project, as well as samples to help get started. The code was originally based off the sample [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) project. The original setup instructions are copied below. Thank you for taking the time to interview at Kapwing!
 
-## Getting Started
+### Getting Started
 
 First, run the development server:
 
