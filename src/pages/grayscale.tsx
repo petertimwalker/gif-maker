@@ -1,8 +1,13 @@
 import Head from "next/head";
 import Navbar from "@/components/Navbar";
-import styles from "@/styles/Home.module.css";
+import Upload from "@/components/Upload";
+import styles from "./Grayscale.module.scss";
 
-export default function Home() {
+const Grayscale = () => {
+  const handleFinish = (uploadedUrls: Array<string>) => {
+    console.log("logging urls", uploadedUrls);
+  };
+
   return (
     <>
       <Head>
@@ -21,8 +26,20 @@ export default function Home() {
         <Navbar />
         <div className={styles.body}>
           <h1 className={styles.header}>Grayscale Generator</h1>
+          <div className={styles.content}>
+            <p>
+              This tool allows a user to upload an image, see a preview of it in
+              grayscale, click create and receive their image with grayscale
+              applied. To get started, upload an image below:
+            </p>
+          </div>
+          <div className={styles.uploader}>
+            <Upload handleFinish={handleFinish} />
+          </div>
         </div>
       </main>
     </>
   );
-}
+};
+
+export default Grayscale;
