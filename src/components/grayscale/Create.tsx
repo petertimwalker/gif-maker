@@ -32,7 +32,7 @@ const CreateButton = ({ url }: CreateProps) => {
           setLoading(false);
         },
         (error) => {
-          console.log("An error occurred:", error);
+          console.error("An error occurred:", error);
           setLoading(false);
         }
       );
