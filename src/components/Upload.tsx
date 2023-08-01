@@ -8,7 +8,7 @@ interface UploadProps {
 
 const Upload = ({ handleFinish }: UploadProps) => {
   const [showProgress, setShowProgress] = useState(false);
-  let { uploadToS3, files } = useS3Upload();
+  let { uploadToS3, files, resetFiles } = useS3Upload();
 
   let handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     if (!(event.target instanceof HTMLInputElement)) return;
@@ -31,6 +31,7 @@ const Upload = ({ handleFinish }: UploadProps) => {
         setShowProgress(false);
       }, 1500);
       handleFinish(s3Urls);
+      resetFiles();
     }
   };
 

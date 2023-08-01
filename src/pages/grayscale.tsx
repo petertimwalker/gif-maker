@@ -1,11 +1,17 @@
+import React, { useState } from "react";
 import Head from "next/head";
 import Navbar from "@/components/Navbar";
 import Upload from "@/components/Upload";
+import Preview from "@/components/grayscale/Preview";
+import Create from "@/components/grayscale/Create";
 import styles from "./Grayscale.module.scss";
 
 const Grayscale = () => {
+  const [url, setUrl] = useState("");
+
   const handleFinish = (uploadedUrls: Array<string>) => {
     console.log("logging urls", uploadedUrls);
+    setUrl(uploadedUrls[0]);
   };
 
   return (
@@ -36,6 +42,12 @@ const Grayscale = () => {
           <div className={styles.uploader}>
             <Upload handleFinish={handleFinish} />
           </div>
+          {url && (
+            <div className={styles.tool}>
+              <Preview url={url} />
+              <Create url={url} />
+            </div>
+          )}
         </div>
       </main>
     </>
