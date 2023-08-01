@@ -12,16 +12,15 @@ const Upload = ({ handleFinish }: UploadProps) => {
 
   let handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     if (!(event.target instanceof HTMLInputElement)) return;
-
     if (
       event &&
       event.target &&
       event.target.files &&
       event.target.files.length > 0
     ) {
+      setShowProgress(true);
       const s3Urls = [];
       const files = event.target.files;
-      setShowProgress(true);
       for (let index = 0; index < files.length; index += 1) {
         const file = files[index];
         const { url } = await uploadToS3(file);
