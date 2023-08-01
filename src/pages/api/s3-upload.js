@@ -24,7 +24,6 @@ export default APIRoute.configure({
   bucket: "kapwing-uploads",
   region: "us-west-2",
   key(req, filename) {
-    const uniqueId = nanoid(8);
-    return `${uniqueId}-${sanitizeKey(filename)}`;
+    return `${nanoid(8)}-${sanitizeKey(filename)}`;
   },
 });

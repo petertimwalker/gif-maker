@@ -41,6 +41,7 @@ const Grayscale = () => {
           </div>
           <div className={styles.uploader}>
             <Upload handleFinish={handleFinish} />
+            {/* <Create url="https://kapwing-uploads.s3.us-west-2.amazonaws.com/YR5Cxzse-IMG_5710.JPG" /> */}
           </div>
           {url && (
             <div className={styles.tool}>
