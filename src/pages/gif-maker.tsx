@@ -1,8 +1,19 @@
 import Head from "next/head";
 import Navbar from "@/components/Navbar";
-import styles from "@/styles/Home.module.css";
+import Upload from "@/components/Upload";
+import styles from "./GifMaker.module.scss";
 
-export default function Home() {
+export default function GIFMaker() {
+  const handleFinish = (uploadedUrls: Array<string>) => {
+    console.log("Uploaded URLs:", uploadedUrls);
+
+    /*
+     * Your GIF Maker logic might start here
+     */
+
+    return;
+  };
+
   return (
     <>
       <Head>
@@ -21,6 +32,18 @@ export default function Home() {
         <Navbar />
         <div className={styles.body}>
           <h1 className={styles.header}>GIF Maker</h1>
+          <p>
+            This GIF Maker allows the user to upload multiple files, preview the
+            images together as a slideshow, and then create the final GIF.
+          </p>
+          <div className={styles.uploader}>
+            <Upload handleFinish={handleFinish} />
+          </div>
+          {/*
+           *
+           * Your GIF Maker implementation might start here
+           *
+           */}
         </div>
       </main>
     </>

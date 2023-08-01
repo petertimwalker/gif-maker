@@ -10,7 +10,6 @@ const Grayscale = () => {
   const [url, setUrl] = useState("");
 
   const handleFinish = (uploadedUrls: Array<string>) => {
-    console.log("logging urls", uploadedUrls);
     setUrl(uploadedUrls[0]);
   };
 
@@ -41,7 +40,6 @@ const Grayscale = () => {
           </div>
           <div className={styles.uploader}>
             <Upload handleFinish={handleFinish} />
-            {/* <Create url="https://kapwing-uploads.s3.us-west-2.amazonaws.com/YR5Cxzse-IMG_5710.JPG" /> */}
           </div>
           {url && (
             <div className={styles.tool}>
