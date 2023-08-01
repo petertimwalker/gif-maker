@@ -1,11 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { downloadFileFromUrl, makeTempFilePathFromUrl } from "@/helpers/files";
+import {
+  downloadFileFromUrl,
+  makeTempFilePathFromUrl,
+  uploadFileFromLocalPath,
+} from "@/helpers/files";
 const sharp = require("sharp");
 
 type ResponseData = {
   grayscaledUrl: string;
-  localInputUrl?: string;
-  localOutputUrl: string;
 };
 
 export default async function handler(
@@ -22,22 +24,17 @@ export default async function handler(
   const localOutputUrl = makeTempFilePathFromUrl(url);
 
   // use sharp to grayscale the image
-  sharp(localInputUrl).grayscale().toFile(localOutputUrl);
+  await sharp(localInputUrl).grayscale().toFile(localOutputUrl);
 
-  //   const imageResponse = await axios({url: url, responseType: 'arraybuffer'});
-  // const buffer = Buffer.from(imageResponse.data, 'binary');
-  // let src = new Sharp(buffer);
-  // try {
-  //     await src.jpeg();
-  //     await src.resize(null, 1920);
-  //     await src.resize(1080, null);
-  //     const metadata = await src.metadata();//this was where it failed, but now it prints an object of metadata
-  //     console.log(metadata);
-  // } catch(e) {
-  //     console.log(e);//Doesn't catch anything any more!
-  // }
+  // upload the grayscaled image to AWS
+  const uploadedUrl = await uploadFileFromLocalPath(localOutputUrl);
 
-  res.status(200).json({ grayscaledUrl: url, localInputUrl, localOutputUrl });
+  // return the image back to the client
+  if (uploadedUrl) {
+    return res.status(200).json({ grayscaledUrl: uploadedUrl });
+  }
+
+  return res.status(500);
 }
 
 export const config = {

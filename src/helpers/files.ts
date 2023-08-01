@@ -1,5 +1,12 @@
 import fetch from "node-fetch";
 import { nanoid } from "nanoid";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import {
+  accessKeyId,
+  secretAccessKey,
+  bucket,
+  region,
+} from "@/helpers/credentials";
 const tmp = require("tmp");
 const fs = require("fs");
 
@@ -55,4 +62,28 @@ export const downloadFileFromUrl = async (url: string) => {
 // this function takes a local file path,
 // uploads that file to Amazon S3
 // then returns the publicly accessible link
-export const uploadFileFromLocalPath = async (localPath: string) => {};
+export const uploadFileFromLocalPath = async (localPath: string) => {
+  try {
+    const s3 = new S3Client({
+      region,
+      credentials: {
+        accessKeyId,
+        secretAccessKey,
+      },
+    });
+
+    const filename = getFilenameFromUrl(localPath);
+    const params = {
+      Bucket: bucket,
+      Key: filename,
+      Body: fs.readFileSync(localPath),
+    };
+
+    const command = new PutObjectCommand(params);
+    await s3.send(command);
+    const s3Url = "https://kapwing-uploads.s3.amazonaws.com/" + filename;
+    return s3Url;
+  } catch (error) {
+    console.error("An error occurred while uploading:", error);
+  }
+};

@@ -28,8 +28,8 @@ const CreateButton = ({ url }: CreateProps) => {
       .then(
         (result) => {
           console.log(result);
-          // const { grayscaledImage } = result;
-          // setImage(grayscaledImage);
+          const { grayscaledUrl } = result;
+          setImage(grayscaledUrl);
           setLoading(false);
         },
         (error) => {
@@ -43,7 +43,7 @@ const CreateButton = ({ url }: CreateProps) => {
     if (!image) return null;
     return (
       <>
-        <div className={styles.header}>Final image:</div>
+        <div className={styles.header}>Final (grayscaled) image:</div>
         <img src={image} alt="Grayscale Final" className={styles.image} />
       </>
     );
