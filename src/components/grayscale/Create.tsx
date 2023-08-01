@@ -27,8 +27,9 @@ const CreateButton = ({ url }: CreateProps) => {
       .then((res) => res.json())
       .then(
         (result) => {
-          const { grayscaledImage } = result;
-          setImage(grayscaledImage);
+          console.log(result);
+          // const { grayscaledImage } = result;
+          // setImage(grayscaledImage);
           setLoading(false);
         },
         (error) => {
