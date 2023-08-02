@@ -21,7 +21,7 @@ export default function Home() {
       <main className={styles.main}>
         <Navbar />
         <div className={styles.body}>
-          <h1 className={styles.header}>Interviewing at Kapwing</h1>
+          <h1 className={styles.header}>Kapwing Interview Project</h1>
           <div className={styles.content}>
             <p className={styles.p}>
               Thank you for taking the time to apply to{" "}
@@ -38,6 +38,14 @@ export default function Home() {
               We&apos;d also love for you to try out any of our video editing{" "}
               <a href="https://www.kapwing.com/tools">tools</a>, and leave us
               any feedback.
+            </p>
+            <p className={styles.p}>
+              If you have questions about this interview project, please reach
+              out to us, or refer to the official{" "}
+              <a href="https://docs.google.com/document/d/1f7MpfMQevpiHisR4LlHJLUvprPdp4tepQbx29zW59E0/edit">
+                project guide
+              </a>
+              .
             </p>
           </div>
         </div>
