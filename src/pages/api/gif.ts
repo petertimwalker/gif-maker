@@ -12,7 +12,7 @@ export default async function handler(
    *
    * Your server side GIF maker implementation should start here
    *
-   * You will probably need to use sharp and GifEncoder
+   * One way to do this is using sharp and GifEncoder
    *
    */
   res.status(200).json({ hello: "world!" });

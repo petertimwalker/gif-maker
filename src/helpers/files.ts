@@ -1,3 +1,6 @@
+import fs from "fs";
+import path from "path";
+import tmp from "tmp";
 import fetch from "node-fetch";
 import { nanoid } from "nanoid";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
@@ -7,20 +10,23 @@ import {
   bucket,
   region,
 } from "@/helpers/credentials";
-const tmp = require("tmp");
-const fs = require("fs");
 
-export const getFilenameFromUrl = (url: string): string => {
+export const getNameAndExtensionFromUrl = (
+  url: string
+): { basename: string; filename: string; extension: string } => {
   if (!url) {
     throw new Error("No URL provided.");
   }
 
-  const filename = url.split("/").pop();
+  const extension = path.extname(url);
 
-  if (!filename) {
+  const basename = path.basename(url, extension);
+
+  if (!basename) {
     throw new Error("No filename found for the provided URL.");
   }
-  return filename;
+
+  return { basename, filename: basename + extension, extension };
 };
 
 export const makeTempFilePath = (filename: string): string => {
@@ -31,7 +37,7 @@ export const makeTempFilePath = (filename: string): string => {
 };
 
 export const makeTempFilePathFromUrl = (url: string): string => {
-  const filename = getFilenameFromUrl(url);
+  const { filename } = getNameAndExtensionFromUrl(url);
   const localFileUrl = makeTempFilePath(filename);
   return localFileUrl;
 };
@@ -41,7 +47,7 @@ export const makeTempFilePathFromUrl = (url: string): string => {
 // to the downloaded file
 export const downloadFileFromUrl = async (url: string) => {
   try {
-    const filename = getFilenameFromUrl(url);
+    const { filename } = getNameAndExtensionFromUrl(url);
     const tempFilepath = makeTempFilePath(filename);
     const res = await fetch(url);
     const fileStream = fs.createWriteStream(tempFilepath);
@@ -62,7 +68,10 @@ export const downloadFileFromUrl = async (url: string) => {
 // this function takes a local file path,
 // uploads that file to Amazon S3
 // then returns the publicly accessible link
-export const uploadFileFromLocalPath = async (localPath: string) => {
+export const uploadFileFromLocalPath = async (
+  localPath: string,
+  storageName: string
+) => {
   try {
     const s3 = new S3Client({
       region,
@@ -72,16 +81,15 @@ export const uploadFileFromLocalPath = async (localPath: string) => {
       },
     });
 
-    const filename = getFilenameFromUrl(localPath);
     const params = {
       Bucket: bucket,
-      Key: filename,
+      Key: storageName,
       Body: fs.readFileSync(localPath),
     };
 
     const command = new PutObjectCommand(params);
     await s3.send(command);
-    const s3Url = "https://kapwing-uploads.s3.amazonaws.com/" + filename;
+    const s3Url = "https://kapwing-uploads.s3.amazonaws.com/" + storageName;
     return s3Url;
   } catch (error) {
     console.error("An error occurred while uploading:", error);
