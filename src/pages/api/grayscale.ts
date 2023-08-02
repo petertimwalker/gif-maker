@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import sharp from "sharp";
 import {
   downloadFileFromUrl,
   makeTempFilePathFromUrl,
   uploadFileFromLocalPath,
 } from "@/helpers/files";
-const sharp = require("sharp");
 
 type ResponseData = {
   grayscaledUrl: string;

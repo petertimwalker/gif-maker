@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import sharp from "sharp";
+import GifEncoder from "gif-encoder";
 
-type ResponseData = {
-  hello: string;
-};
+type ResponseData = {};
 
 export default async function handler(
   req: NextApiRequest,
@@ -12,6 +12,7 @@ export default async function handler(
    *
    * Your server side GIF maker implementation should start here
    *
+   * You will probably need to use sharp and GifEncoder
    *
    */
   res.status(200).json({ hello: "world!" });
