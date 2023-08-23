@@ -7,11 +7,11 @@
  *
  * these credentials give read/write access to the kapwing-uploads bucket on s3
  *
- * Please make sure that you use a private github repo for your interview,]
+ * Please make sure that you use a private github repo for your interview,
  * so that these keys are not exposed to the internet.
  */
 
-export const accessKeyId = "AKIA2YJ3H2ADP6PAY2PF";
-export const secretAccessKey = "WFiryHz722g9n7YvnCcuf4nfRnM1qiOL2YlGU+q/";
+export const accessKeyId = "AKIA2YJ3H2ADPEUOKHJ3";
+export const secretAccessKey = "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";
 export const bucket = "kapwing-uploads";
 export const region = "us-west-2";
