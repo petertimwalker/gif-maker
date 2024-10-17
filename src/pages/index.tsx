@@ -21,7 +21,9 @@ export default function Home() {
       <main className={styles.main}>
         <Navbar />
         <div className={styles.body}>
-          <h1 className={styles.header}>Kapwing Interview Project</h1>
+          <h1 className={styles.header}>
+            Kapwing Interview Project by Peter Walker
+          </h1>
           <div className={styles.content}>
             <p className={styles.p}>
               Thank you for taking the time to apply to{" "}
