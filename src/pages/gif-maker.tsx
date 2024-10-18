@@ -5,6 +5,7 @@ import Upload from "@/components/Upload";
 import styles from "./GifMaker.module.scss";
 import Frames from "@/components/gif-maker/Frames";
 import Preview from "@/components/gif-maker/Preview";
+import Create from "@/components/gif-maker/Create";
 
 export default function GIFMaker() {
   const [urls, setUrls] = useState<string[]>([]);
@@ -48,6 +49,7 @@ export default function GIFMaker() {
             <>
               <Frames urls={urls} />
               <Preview urls={urls} />
+              <Create urls={urls} />
             </>
           )}
         </div>
