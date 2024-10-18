@@ -1,10 +1,14 @@
+import React, { useState } from "react";
 import Head from "next/head";
 import Navbar from "@/components/Navbar";
 import Upload from "@/components/Upload";
 import styles from "./GifMaker.module.scss";
+import Frames from "@/components/gif-maker/Frames";
 
 export default function GIFMaker() {
+  const [urls, setUrls] = useState<string[]>([]);
   const handleFinish = (uploadedUrls: Array<string>) => {
+    setUrls(uploadedUrls);
     console.log("Uploaded URLs:", uploadedUrls);
 
     /*
@@ -39,11 +43,10 @@ export default function GIFMaker() {
           <div className={styles.uploader}>
             <Upload handleFinish={handleFinish} />
           </div>
-          {/*
-           *
-           * Your GIF Maker implementation might start here
-           *
-           */}
+          {
+            urls.length > 0 && <Frames urls={urls} />
+            // create a preview which takes in a frames component and plays the frames in order
+          }
         </div>
       </main>
     </>
