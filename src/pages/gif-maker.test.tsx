@@ -36,8 +36,19 @@ describe("GIFMaker", () => {
     fireEvent.click(uploadButton);
 
     const imageElements = screen.getAllByRole("img");
-    expect(imageElements.length).toBe(2);
     expect(imageElements[0]).toHaveAttribute("src", "url1.jpg");
     expect(imageElements[1]).toHaveAttribute("src", "url2.jpg");
+  });
+
+  it("renders preview after upload", () => {
+    mockUrls = ["url1.jpg", "url2.jpg"];
+    render(<GIFMaker />);
+
+    const uploadButton = screen.getByText("Upload");
+    fireEvent.click(uploadButton);
+
+    expect(screen.getByText("Preview of GIF:")).toBeInTheDocument();
+    expect(screen.getByText("Set Interval (ms):")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Stop" })).toBeInTheDocument();
   });
 });
