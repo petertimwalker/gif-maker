@@ -1,6 +1,8 @@
 import React from "react";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import GIFMaker from "./gif-maker";
+import fetchMock from "jest-fetch-mock";
+fetchMock.enableMocks();
 
 let mockUrls: string[] = [];
 
@@ -62,7 +64,10 @@ describe("GIFMaker", () => {
     expect(screen.getByText("Create GIF")).toBeInTheDocument();
   });
 
-  it("creates GIF", () => {
+  it("calls /api/gif endpoint and renders final GIF", async () => {
+    fetchMock.mockResponseOnce(
+      JSON.stringify({ gifUrl: "http://example.com/final_gif.gif" })
+    );
     mockUrls = ["url1.jpg", "url2.jpg"];
     render(<GIFMaker />);
 
@@ -72,6 +77,13 @@ describe("GIFMaker", () => {
     const createButton = screen.getByText("Create GIF");
     fireEvent.click(createButton);
 
-    expect(screen.getByText("Final GIF")).toBeInTheDocument();
+    await waitFor(() => {
+      const finalGifElement = screen.getByAltText("Final GIF");
+      expect(finalGifElement).toBeInTheDocument();
+      expect(finalGifElement).toHaveAttribute(
+        "src",
+        "http://example.com/final_gif.gif"
+      );
+    });
   });
 });
