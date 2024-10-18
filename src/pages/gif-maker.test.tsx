@@ -51,4 +51,27 @@ describe("GIFMaker", () => {
     expect(screen.getByText("Set Interval (ms):")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Stop" })).toBeInTheDocument();
   });
+
+  it("renders Create component after upload", () => {
+    mockUrls = ["url1.jpg", "url2.jpg"];
+    render(<GIFMaker />);
+
+    const uploadButton = screen.getByText("Upload");
+    fireEvent.click(uploadButton);
+
+    expect(screen.getByText("Create GIF")).toBeInTheDocument();
+  });
+
+  it("creates GIF", () => {
+    mockUrls = ["url1.jpg", "url2.jpg"];
+    render(<GIFMaker />);
+
+    const uploadButton = screen.getByText("Upload");
+    fireEvent.click(uploadButton);
+
+    const createButton = screen.getByText("Create GIF");
+    fireEvent.click(createButton);
+
+    expect(screen.getByText("Final GIF")).toBeInTheDocument();
+  });
 });
