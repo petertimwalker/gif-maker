@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import Upload from "@/components/Upload";
 import styles from "./GifMaker.module.scss";
 import Frames from "@/components/gif-maker/Frames";
+import Preview from "@/components/gif-maker/Preview";
 
 export default function GIFMaker() {
   const [urls, setUrls] = useState<string[]>([]);
@@ -43,10 +44,12 @@ export default function GIFMaker() {
           <div className={styles.uploader}>
             <Upload handleFinish={handleFinish} />
           </div>
-          {
-            urls.length > 0 && <Frames urls={urls} />
-            // create a preview which takes in a frames component and plays the frames in order
-          }
+          {urls.length > 0 && (
+            <>
+              <Frames urls={urls} />
+              <Preview urls={urls} />
+            </>
+          )}
         </div>
       </main>
     </>
