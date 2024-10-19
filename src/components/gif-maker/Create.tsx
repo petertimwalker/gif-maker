@@ -59,6 +59,27 @@ const CreateButton = ({ urls, intervalDuration }: CreateProps) => {
     );
   };
 
+  const renderDownloadButton = () => {
+    if (!gif) return null;
+    return (
+      <a href={gif} download="final_gif.gif" className={styles.downloadButton}>
+        <button>Download GIF</button>
+      </a>
+    );
+  };
+
+  const renderError = () => {
+    if (!error) return null;
+    return (
+      <div className={styles.errorContainer}>
+        <h2>Oops! Something went wrong while creating your GIF</h2>
+        <p className={styles.errorMessage}>{error}</p>
+        <br />
+        <p>We are sorry for the inconvenience. Please try again later</p>
+      </div>
+    );
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.description}>
@@ -71,14 +92,8 @@ const CreateButton = ({ urls, intervalDuration }: CreateProps) => {
         <input type="button" value="Create GIF" onClick={create} />
       )}
       {renderFinalGif()}
-      {error && (
-        <div className={styles.errorContainer}>
-          <h2>Oops! Something went wrong while creating your GIF</h2>
-          <p className={styles.errorMessage}>{error}</p>
-          <br />
-          <p>We are sorry for the inconvenience. Please try again later</p>
-        </div>
-      )}
+      {renderDownloadButton()}
+      {renderError()}
     </div>
   );
 };
