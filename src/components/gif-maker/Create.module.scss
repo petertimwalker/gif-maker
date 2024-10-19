@@ -17,3 +17,20 @@
   display: block;
   width: 100%;
 }
+
+.errorContainer {
+  border: 1px solid red;
+  padding: 16px;
+  margin-top: 16px;
+  background-color: #ffe6e6;
+  color: #cc0000;
+}
+
+.errorContainer h2 {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+}
+
+.errorMessage {
+  font-weight: bold;
+}
