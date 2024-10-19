@@ -3,18 +3,21 @@ import styles from "./Create.module.scss";
 
 interface CreateProps {
   urls: string[];
+  intervalDuration: number;
 }
 
-const CreateButton = ({ urls }: CreateProps) => {
+const CreateButton = ({ urls, intervalDuration }: CreateProps) => {
   const [loading, setLoading] = useState(false);
   const [gif, setGif] = useState("");
 
   const create = () => {
     const body = {
       urls,
+      intervalDuration,
     };
 
     setLoading(true);
+    setGif("");
 
     fetch("/api/gif", {
       headers: {
@@ -27,7 +30,9 @@ const CreateButton = ({ urls }: CreateProps) => {
       .then(
         (result) => {
           const { gifUrl } = result;
-          setGif(gifUrl);
+          // Append a timestamp to the GIF URL to prevent caching
+          const cachedGifUrl = `${gifUrl}?t=${new Date().getTime()}`;
+          setGif(cachedGifUrl);
           setLoading(false);
         },
         (error) => {

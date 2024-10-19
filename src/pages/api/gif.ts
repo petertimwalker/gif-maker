@@ -17,7 +17,7 @@ export default async function handler(
   res: NextApiResponse<ResponseData>
 ) {
   const { body } = req;
-  const { urls } = body;
+  const { urls, intervalDuration } = body;
 
   const files: string[] = await downloadFilesLocally();
 
@@ -26,7 +26,7 @@ export default async function handler(
   const gifFileName = `${basename}.gif`;
   const localOutputPath = makeTempFilePathFromUrl(gifFileName);
 
-  await createGif("neuquant", localOutputPath, files);
+  await createGif("neuquant", localOutputPath, files, intervalDuration);
 
   const uploadedUrl = await uploadFileFromLocalPath(
     localOutputPath,
@@ -67,7 +67,8 @@ export default async function handler(
   async function createGif(
     algorithm: string,
     localOutputPath: string,
-    files: string[]
+    files: string[],
+    intervalDuration: number
   ) {
     return new Promise<void>(async (resolve1) => {
       // Create a new GIF file
@@ -90,7 +91,7 @@ export default async function handler(
       // pipe encoder's read stream to our write stream
       encoder.createReadStream().pipe(writeStream);
       encoder.start();
-      encoder.setDelay(200);
+      encoder.setDelay(intervalDuration);
 
       const canvas = createCanvas(width, height);
       const ctx = canvas.getContext("2d");

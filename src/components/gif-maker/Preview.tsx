@@ -3,10 +3,16 @@ import styles from "./Preview.module.scss";
 
 interface PreviewProps {
   urls: string[];
+  intervalDuration: number;
+  setIntervalDuration: (duration: number) => void;
 }
-const Preview = ({ urls }: PreviewProps) => {
+
+const Preview = ({
+  urls,
+  intervalDuration,
+  setIntervalDuration,
+}: PreviewProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [intervalDuration, setIntervalDuration] = useState<number>(1000);
   const [isRunning, setIsRunning] = useState<boolean>(true);
 
   const handleIntervalChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,11 +38,15 @@ const Preview = ({ urls }: PreviewProps) => {
       <div>
         <label htmlFor="interval">Set Interval (ms): </label>
         <input
-          type="number"
+          type="range"
           id="interval"
+          min="100"
+          max="1000"
+          step="10"
           value={intervalDuration}
           onChange={handleIntervalChange}
         />
+        <span>{intervalDuration} ms</span>
         <button onClick={toggleRunning}>{isRunning ? "Stop" : "Start"}</button>
       </div>
       {urls.length > 0 && (
