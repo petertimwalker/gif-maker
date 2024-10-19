@@ -1,5 +1,5 @@
 import { createMocks } from "node-mocks-http";
-import handler from "./gif";
+import handler from "../../../src/pages/api/gif";
 import { NextApiRequest, NextApiResponse } from "next";
 
 jest.mock("@/helpers/files", () => ({

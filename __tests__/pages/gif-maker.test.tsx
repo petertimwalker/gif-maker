@@ -1,6 +1,6 @@
 import React from "react";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import GIFMaker from "./gif-maker";
+import GIFMaker from "../../src/pages/gif-maker";
 import fetchMock from "jest-fetch-mock";
 fetchMock.enableMocks();
 
