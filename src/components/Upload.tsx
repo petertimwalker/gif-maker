@@ -50,7 +50,12 @@ const Upload = ({ handleFinish }: UploadProps) => {
 
   return (
     <div className={styles.container}>
-      <input onChange={handleFileChange} type="file" multiple />
+      <input
+        onChange={handleFileChange}
+        type="file"
+        multiple
+        className="mb-4 p-2 border border-gray-300 rounded-md"
+      />
       {showProgress && renderShowProgress()}
     </div>
   );

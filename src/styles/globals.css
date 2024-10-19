@@ -51,3 +51,7 @@ h6 {
 body {
   font-family: "Raleway", sans-serif;
 }
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
