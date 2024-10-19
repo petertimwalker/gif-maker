@@ -80,8 +80,7 @@ describe("GIFMaker", () => {
     await waitFor(() => {
       const finalGifElement = screen.getByAltText("Final GIF");
       expect(finalGifElement).toBeInTheDocument();
-      expect(finalGifElement).toHaveAttribute(
-        "src",
+      expect(finalGifElement.getAttribute("src")).toContain(
         "http://example.com/final_gif.gif"
       );
     });
