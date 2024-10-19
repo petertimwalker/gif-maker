@@ -64,7 +64,7 @@ export default async function handler(
     for (const url of urls) {
       const localInputUrl = await downloadFileFromUrl(url);
       const resizedImage = await resizeImage(localInputUrl, 100, 100);
-      if (localInputUrl) {
+      if (resizedImage) {
         files.push(resizedImage);
       }
     }
