@@ -9,6 +9,7 @@ import { unlink } from "fs/promises";
 const GIFEncoder = require("gif-encoder-2");
 const { createCanvas, Image } = require("canvas");
 const { createWriteStream } = require("fs");
+import sharp from "sharp";
 
 type ResponseData = {};
 
@@ -62,11 +63,22 @@ export default async function handler(
     const files: string[] = [];
     for (const url of urls) {
       const localInputUrl = await downloadFileFromUrl(url);
+      const resizedImage = await resizeImage(localInputUrl, 100, 100);
       if (localInputUrl) {
-        files.push(localInputUrl);
+        files.push(resizedImage);
       }
     }
     return files;
+  }
+
+  async function resizeImage(
+    inputPath: string,
+    width: number,
+    height: number
+  ): Promise<string> {
+    const outputPath = inputPath.replace(/(\.\w+)$/, "_resized$1");
+    await sharp(inputPath).resize(width, height).toFile(outputPath);
+    return outputPath;
   }
 
   async function createGif(
