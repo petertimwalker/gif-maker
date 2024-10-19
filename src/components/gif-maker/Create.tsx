@@ -7,7 +7,7 @@ interface CreateProps {
 
 const CreateButton = ({ urls }: CreateProps) => {
   const [loading, setLoading] = useState(false);
-  const [gif, setGif] = useState(undefined);
+  const [gif, setGif] = useState("");
 
   const create = () => {
     const body = {
@@ -15,7 +15,6 @@ const CreateButton = ({ urls }: CreateProps) => {
     };
 
     setLoading(true);
-    setGif(undefined);
 
     fetch("/api/gif", {
       headers: {
