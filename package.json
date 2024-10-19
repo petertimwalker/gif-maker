@@ -26,6 +26,7 @@
     "next": "13.4.12",
     "next-s3-upload": "^0.3.0",
     "node-fetch": "^3.3.2",
+    "node-mocks-http": "^1.16.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "sass": "^1.64.1",
