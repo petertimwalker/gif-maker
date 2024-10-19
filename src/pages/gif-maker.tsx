@@ -11,12 +11,6 @@ export default function GIFMaker() {
   const [urls, setUrls] = useState<string[]>([]);
   const handleFinish = (uploadedUrls: Array<string>) => {
     setUrls(uploadedUrls);
-    console.log("Uploaded URLs:", uploadedUrls);
-
-    /*
-     * Your GIF Maker logic might start here
-     */
-
     return;
   };
 
