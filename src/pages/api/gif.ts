@@ -26,7 +26,12 @@ export default async function handler(
   const gifFileName = `${basename}.gif`;
   const localOutputPath = makeTempFilePathFromUrl(gifFileName);
 
-  await createGif("neuquant", localOutputPath, files, intervalDuration);
+  try {
+    await createGif("neuquant", localOutputPath, files, intervalDuration);
+  } catch (error: any) {
+    await cleanupLocalFiles([...files, localOutputPath]);
+    return res.status(error.code).json({ error: error.message });
+  }
 
   const uploadedUrl = await uploadFileFromLocalPath(
     localOutputPath,
@@ -38,7 +43,7 @@ export default async function handler(
     return res.status(200).json({ gifUrl: uploadedUrl });
   }
 
-  return res.status(500);
+  return res.status(500).json({ error: "Internal server error" });
 
   async function cleanupLocalFiles(filePaths: string[]) {
     const unlinkPromises = filePaths.map((filePath) =>
@@ -70,45 +75,80 @@ export default async function handler(
     files: string[],
     intervalDuration: number
   ) {
-    return new Promise<void>(async (resolve1) => {
-      // Create a new GIF file
-      // find the width and height of the image
-      const [width, height] = await new Promise<[number, number]>(
-        (resolve2) => {
-          const image = new Image();
-          image.onload = () => resolve2([image.width, image.height]);
-          image.src = files[0];
-        }
-      );
+    return new Promise<void>(async (resolve1, reject1) => {
+      try {
+        // Create a new GIF file
+        // find the width and height of the image
+        const [width, height] = await new Promise<[number, number]>(
+          (resolve2, reject2) => {
+            const image = new Image();
+            image.onload = () => resolve2([image.width, image.height]);
+            image.onerror = (error: any) => {
+              const { basename, extension } = getNameAndExtensionFromUrl(
+                files[0]
+              );
+              reject2({
+                code: 400,
+                message: `Failed to load image ${basename + extension}`,
+                error,
+              });
+            };
+            image.src = files[0];
+          }
+        );
 
-      const writeStream = createWriteStream(localOutputPath);
+        const writeStream = createWriteStream(localOutputPath);
 
-      // when stream closes GIF is created so resolve promise
-      writeStream.on("close", () => {
-        resolve1();
-      });
-      const encoder = new GIFEncoder(width, height, algorithm);
-      // pipe encoder's read stream to our write stream
-      encoder.createReadStream().pipe(writeStream);
-      encoder.start();
-      encoder.setDelay(intervalDuration);
-
-      const canvas = createCanvas(width, height);
-      const ctx = canvas.getContext("2d");
-
-      // draw an image for each file and add frame to encoder
-      for (const file of files) {
-        await new Promise<void>((resolve3) => {
-          const image = new Image();
-          image.onload = () => {
-            ctx.drawImage(image, 0, 0);
-            encoder.addFrame(ctx);
-            resolve3();
-          };
-          image.src = file;
+        // when stream closes GIF is created so resolve promise
+        writeStream.on("close", () => {
+          resolve1();
         });
+
+        writeStream.on("error", (error: any) => {
+          reject1({ code: 500, message: "Failed to write GIF file", error });
+        });
+
+        const encoder = new GIFEncoder(width, height, algorithm);
+        // pipe encoder's read stream to our write stream
+        encoder.createReadStream().pipe(writeStream);
+        encoder.start();
+        encoder.setDelay(intervalDuration);
+
+        const canvas = createCanvas(width, height);
+        const ctx = canvas.getContext("2d");
+
+        // draw an image for each file and add frame to encoder
+        for (const file of files) {
+          await new Promise<void>((resolve3, reject3) => {
+            const image = new Image();
+            const { basename, extension } = getNameAndExtensionFromUrl(file);
+            const timeout = setTimeout(() => {
+              const error = new Error(
+                `Image ${basename + extension} is taking too long to draw`
+              );
+              reject3(error);
+            }, 5000); // 5 seconds timeout
+            image.onload = () => {
+              clearTimeout(timeout);
+              ctx.drawImage(image, 0, 0);
+              encoder.addFrame(ctx);
+              resolve3();
+            };
+            image.onerror = (error: any) => {
+              clearTimeout(timeout);
+              reject3({
+                code: 500,
+                message: `Error occured while drawing ${basename + extension}`,
+                error,
+              });
+            };
+            image.src = file;
+          });
+        }
+        encoder.finish();
+      } catch (error) {
+        reject1(error);
       }
-      encoder.finish();
     });
   }
 }

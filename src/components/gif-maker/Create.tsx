@@ -32,6 +32,7 @@ const CreateButton = ({ urls, intervalDuration }: CreateProps) => {
         (result) => {
           const { gifUrl, error } = result;
           setLoading(false);
+          setError("");
           if (error) {
             setError(error);
             return;
