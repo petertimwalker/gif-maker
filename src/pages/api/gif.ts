@@ -33,7 +33,9 @@ export default async function handler(
     await createGif("neuquant");
   } catch (error: any) {
     await cleanupLocalFiles([...files, localOutputPath]);
-    return res.status(error.code).json({ error: error.message });
+    return res
+      .status(error.code)
+      .json({ error: `${error.info} => ${error.message}` });
   }
 
   // upload the GIF to S3
@@ -112,7 +114,11 @@ export default async function handler(
         });
 
         writeStream.on("error", (error: any) => {
-          reject1({ code: 500, message: "Failed to write GIF file", error });
+          reject1({
+            code: 500,
+            info: "Failed to write GIF file",
+            message: error.message,
+          });
         });
 
         const encoder = new GIFEncoder(width, height, algorithm);
@@ -131,10 +137,13 @@ export default async function handler(
 
             const { basename, extension } = getNameAndExtensionFromUrl(file);
             const timeout = setTimeout(() => {
-              const error = new Error(
-                `Image ${basename + extension} is taking too long to draw`
-              );
-              reject2(error);
+              reject2({
+                code: 500,
+                info: `Image ${
+                  basename + extension
+                } is taking too long to draw`,
+                message: "Timeout",
+              });
             }, 5000); // 5 seconds timeout
 
             image.onload = () => {
@@ -147,8 +156,8 @@ export default async function handler(
               clearTimeout(timeout);
               reject2({
                 code: 500,
-                message: `Error occured while drawing ${basename + extension}`,
-                error,
+                info: `Error occured while drawing ${basename + extension}`,
+                message: error,
               });
             };
             image.src = file;
@@ -156,7 +165,7 @@ export default async function handler(
         }
         encoder.finish();
       } catch (error) {
-        reject1({ code: 500, message: "Failed to write GIF file", error });
+        reject1(error);
       }
     });
   }
