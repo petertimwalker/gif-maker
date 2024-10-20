@@ -29,8 +29,10 @@ const Grayscale = () => {
       </Head>
       <main className={styles.main}>
         <Navbar />
-        <div className={styles.body}>
-          <h1 className={styles.header}>Grayscale Generator</h1>
+        <div className={`${styles.body} bg-white rounded-lg p-8 shadow-md`}>
+          <h1 className="text-3xl font-bold mb-6 text-gray-800">
+            Grayscale Generator
+          </h1>
           <div className={styles.content}>
             <p>
               This tool allows a user to upload an image, see a preview of it in

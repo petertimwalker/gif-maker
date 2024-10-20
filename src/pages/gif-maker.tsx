@@ -31,8 +31,8 @@ export default function GIFMaker() {
       </Head>
       <main className={styles.main}>
         <Navbar />
-        <div className={styles.body}>
-          <h1 className={styles.header}>GIF Maker</h1>
+        <div className={`${styles.body} bg-white rounded-lg p-8 shadow-md`}>
+          <h1 className="text-3xl font-bold mb-6 text-gray-800">GIF Maker</h1>
           <p>
             This GIF Maker allows the user to upload multiple files, preview the
             images together as a slideshow, and then create the final GIF.

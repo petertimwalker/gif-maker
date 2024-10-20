@@ -18,10 +18,10 @@ export default function Home() {
           href="https://cdn-useast1.kapwing.com/static/TwE-favicon.ico"
         />
       </Head>
+      <Navbar />
       <main className={styles.main}>
-        <Navbar />
-        <div className={styles.body}>
-          <h1 className={styles.header}>
+        <div className={`${styles.body} bg-white rounded-lg p-8 shadow-md`}>
+          <h1 className="text-3xl font-bold mb-6 text-gray-800">
             Kapwing Interview Project by Peter Walker
           </h1>
           <div className={styles.content}>
