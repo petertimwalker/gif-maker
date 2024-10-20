@@ -62,8 +62,10 @@ const CreateButton = ({ urls, intervalDuration }: CreateProps) => {
   const renderDownloadButton = () => {
     if (!gif) return null;
     return (
-      <a href={gif} download="final_gif.gif" className={styles.downloadButton}>
-        <button>Download GIF</button>
+      <a href={gif}>
+        <button className="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75">
+          Download GIF
+        </button>
       </a>
     );
   };
@@ -71,25 +73,31 @@ const CreateButton = ({ urls, intervalDuration }: CreateProps) => {
   const renderError = () => {
     if (!error) return null;
     return (
-      <div className={styles.errorContainer}>
-        <h2>Oops! Something went wrong while creating your GIF</h2>
-        <p className={styles.errorMessage}>{error}</p>
-        <br />
+      <div className="p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+        <h2 className="text-lg font-semibold mb-2">
+          Oops! Something went wrong while creating your GIF
+        </h2>
+        <p className="mb-4">{error}</p>
         <p>We are sorry for the inconvenience. Please try again later</p>
       </div>
     );
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.description}>
+    <div className="container mx-auto p-4">
+      <div className="mb-4 text-gray-700">
         The image above is a preview of what your GIF will look like after using
         this tool. To create your final GIF, click the button below:
       </div>
       {loading ? (
-        "Loading ..."
+        <div className="text-center text-gray-500">Loading ...</div>
       ) : (
-        <input type="button" value="Create GIF" onClick={create} />
+        <input
+          type="button"
+          value="Create GIF"
+          onClick={create}
+          className="px-4 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
+        />
       )}
       {renderFinalGif()}
       {renderDownloadButton()}
