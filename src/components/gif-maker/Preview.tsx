@@ -38,38 +38,36 @@ const Preview = ({
 
   const dimensionControls = () => {
     return (
-      <>
-        <label>
-          Height: {dimensions.height}px
-          <input
-            type="range"
-            min="100"
-            max="500"
-            step="10"
-            value={dimensions.height}
-            onChange={(e) => handleDimensionChange(e, "height")}
-          />
-        </label>
-        <label>
-          Width: {dimensions.width}px
-          <input
-            type="range"
-            min="100"
-            max="500"
-            step="10"
-            value={dimensions.width}
-            onChange={(e) => handleDimensionChange(e, "width")}
-          />
-        </label>
-      </>
+      <div className="flex flex-col space-y-2 flex-grow">
+        <label className=" text-gray-700">Height: {dimensions.height}px</label>
+        <input
+          type="range"
+          min="100"
+          max="500"
+          step="10"
+          value={dimensions.height}
+          onChange={(e) => handleDimensionChange(e, "height")}
+          className="w-full mb-4"
+        />
+        <label className="text-gray-700">Width: {dimensions.width}px</label>
+        <input
+          type="range"
+          min="100"
+          max="500"
+          step="10"
+          value={dimensions.width}
+          onChange={(e) => handleDimensionChange(e, "width")}
+          className="w-full mb-4"
+        />
+      </div>
     );
   };
 
   const previewControls = () => {
     return (
       <div className="p-4 bg-gray-100 rounded-lg shadow-md">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Set Interval (ms):
+        <label className="block font-medium text-gray-700">
+          Set Interval: {intervalDuration} ms
         </label>
         <input
           type="range"
@@ -81,20 +79,20 @@ const Preview = ({
           onChange={handleIntervalChange}
           className="w-full mb-4"
         />
-        <span className="block text-sm text-gray-700 mb-4">
-          {intervalDuration} ms
-        </span>
-        <button
-          onClick={toggleRunning}
-          className={`px-4 py-2 rounded-lg text-white ${
-            isRunning
-              ? "bg-red-500 hover:bg-red-600"
-              : "bg-green-500 hover:bg-green-600"
-          }`}
-        >
-          {isRunning ? "Stop" : "Start"}
-        </button>
-        {dimensionControls()}
+        <span className="block text-sm text-gray-700"></span>
+        <div className="flex items-center space-x-4">
+          <button
+            onClick={toggleRunning}
+            className={`px-4 py-2 rounded-lg text-white ${
+              isRunning
+                ? "bg-red-500 hover:bg-red-600"
+                : "bg-green-500 hover:bg-green-600"
+            }`}
+          >
+            {isRunning ? "Stop" : "Start"}
+          </button>
+          {dimensionControls()}
+        </div>
       </div>
     );
   };
