@@ -10,6 +10,10 @@ import Create from "@/components/gif-maker/Create";
 export default function GIFMaker() {
   const [urls, setUrls] = useState<string[]>([]);
   const [intervalDuration, setIntervalDuration] = useState<number>(1000);
+  const [dimensions, setDimensions] = useState<{
+    width: number;
+    height: number;
+  }>({ width: 100, height: 100 });
   const handleFinish = (uploadedUrls: Array<string>) => {
     setUrls(uploadedUrls);
     return;
@@ -47,8 +51,14 @@ export default function GIFMaker() {
                 urls={urls}
                 intervalDuration={intervalDuration}
                 setIntervalDuration={setIntervalDuration}
+                dimensions={dimensions}
+                setDimensions={setDimensions}
               />
-              <Create urls={urls} intervalDuration={intervalDuration} />
+              <Create
+                urls={urls}
+                intervalDuration={intervalDuration}
+                dimensions={dimensions}
+              />
             </>
           )}
         </div>

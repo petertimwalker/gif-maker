@@ -5,21 +5,64 @@ interface PreviewProps {
   urls: string[];
   intervalDuration: number;
   setIntervalDuration: (duration: number) => void;
+  dimensions: { width: number; height: number };
+  setDimensions: (dimensions: { width: number; height: number }) => void;
 }
 
 const Preview = ({
   urls,
   intervalDuration,
   setIntervalDuration,
+  dimensions,
+  setDimensions,
 }: PreviewProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isRunning, setIsRunning] = useState<boolean>(true);
+
+  const handleDimensionChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    key: "width" | "height"
+  ) => {
+    setDimensions({
+      ...dimensions,
+      [key]: Number(event.target.value),
+    });
+  };
 
   const handleIntervalChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIntervalDuration(Number(event.target.value));
   };
   const toggleRunning = () => {
     setIsRunning((prevIsRunning) => !prevIsRunning);
+  };
+
+  const dimensionControls = () => {
+    return (
+      <>
+        <label>
+          Height: {dimensions.height}px
+          <input
+            type="range"
+            min="100"
+            max="500"
+            step="10"
+            value={dimensions.height}
+            onChange={(e) => handleDimensionChange(e, "height")}
+          />
+        </label>
+        <label>
+          Width: {dimensions.width}px
+          <input
+            type="range"
+            min="100"
+            max="500"
+            step="10"
+            value={dimensions.width}
+            onChange={(e) => handleDimensionChange(e, "width")}
+          />
+        </label>
+      </>
+    );
   };
 
   const previewControls = () => {
@@ -51,6 +94,7 @@ const Preview = ({
         >
           {isRunning ? "Stop" : "Start"}
         </button>
+        {dimensionControls()}
       </div>
     );
   };
@@ -68,14 +112,18 @@ const Preview = ({
   return (
     <div className={styles.container}>
       <div className={styles.header}>Preview of GIF:</div>
+      {previewControls()}
       {urls.length > 0 && (
         <img
-          className={styles.image}
+          className={styles.preview}
+          style={{
+            width: `${dimensions.width}px`,
+            height: `${dimensions.height}px`,
+          }}
           src={urls[currentIndex]}
           alt={`frame-${currentIndex}`}
         />
       )}
-      {previewControls()}
     </div>
   );
 };

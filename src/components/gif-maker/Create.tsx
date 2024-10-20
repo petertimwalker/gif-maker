@@ -4,9 +4,10 @@ import styles from "./Create.module.scss";
 interface CreateProps {
   urls: string[];
   intervalDuration: number;
+  dimensions: { width: number; height: number };
 }
 
-const CreateButton = ({ urls, intervalDuration }: CreateProps) => {
+const CreateButton = ({ urls, intervalDuration, dimensions }: CreateProps) => {
   const [loading, setLoading] = useState(false);
   const [gif, setGif] = useState("");
   const [error, setError] = useState("");
@@ -15,6 +16,7 @@ const CreateButton = ({ urls, intervalDuration }: CreateProps) => {
     const body = {
       urls,
       intervalDuration,
+      dimensions,
     };
 
     setLoading(true);
@@ -54,7 +56,7 @@ const CreateButton = ({ urls, intervalDuration }: CreateProps) => {
     return (
       <>
         <div className={styles.header}>Final GIF</div>
-        <img src={gif} alt="Final GIF" className={styles.gif} />
+        <img src={gif} alt="Final GIF:" className={styles.gif} />
       </>
     );
   };
@@ -84,7 +86,7 @@ const CreateButton = ({ urls, intervalDuration }: CreateProps) => {
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div>
       <div className="mb-4 text-gray-700">
         The image above is a preview of what your GIF will look like after using
         this tool. To create your final GIF, click the button below:
