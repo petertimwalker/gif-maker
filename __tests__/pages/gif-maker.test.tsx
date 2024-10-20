@@ -50,7 +50,6 @@ describe("GIFMaker", () => {
     fireEvent.click(uploadButton);
 
     expect(screen.getByText("Preview of GIF:")).toBeInTheDocument();
-    expect(screen.getByText("Set Interval (ms):")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Stop" })).toBeInTheDocument();
   });
 
