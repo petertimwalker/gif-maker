@@ -78,7 +78,7 @@ describe("GIFMaker", () => {
     fireEvent.click(createButton);
 
     await waitFor(() => {
-      const finalGifElement = screen.getByAltText("Final GIF");
+      const finalGifElement = screen.getByAltText("Final GIF:");
       expect(finalGifElement).toBeInTheDocument();
       expect(finalGifElement.getAttribute("src")).toContain(
         "http://example.com/final_gif.gif"

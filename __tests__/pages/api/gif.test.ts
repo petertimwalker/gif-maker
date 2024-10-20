@@ -68,7 +68,11 @@ describe("GIF Endpoint", () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "POST",
       url: "/api/gif",
-      body: { urls: ["http://example.com/image.png"] },
+      body: {
+        urls: ["http://example.com/image.png"],
+        intervalDuration: 500,
+        dimensions: { width: 100, height: 100 },
+      },
     });
 
     await handler(req, res);
@@ -83,7 +87,11 @@ describe("GIF Endpoint", () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
       method: "POST",
       url: "/api/gif",
-      body: { urls: ["http://example.com/image.png"] },
+      body: {
+        urls: ["http://example.com/image.png"],
+        intervalDuration: 500,
+        dimensions: { width: 100, height: 100 },
+      },
     });
 
     jest
