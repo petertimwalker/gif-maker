@@ -18,7 +18,8 @@ export default async function handler(
   res: NextApiResponse<ResponseData>
 ) {
   const { body } = req;
-  const { urls, intervalDuration } = body;
+  const { urls, intervalDuration, dimensions } = body;
+  const { width, height } = dimensions;
 
   const files: string[] = await downloadFilesLocally();
 
@@ -29,7 +30,7 @@ export default async function handler(
 
   // create GIF
   try {
-    await createGif("neuquant", localOutputPath, files, intervalDuration);
+    await createGif("neuquant");
   } catch (error: any) {
     await cleanupLocalFiles([...files, localOutputPath]);
     return res.status(error.code).json({ error: error.message });
@@ -75,7 +76,7 @@ export default async function handler(
 
       // if the file was downloaded successfully, resize it accordingly
       if (localInputUrl) {
-        const resizedImage = await resizeImage(localInputUrl, 100, 100);
+        const resizedImage = await resizeImage(localInputUrl);
         if (resizedImage) {
           files.push(resizedImage);
         }
@@ -86,47 +87,23 @@ export default async function handler(
     return files;
   }
 
-  async function resizeImage(
-    inputPath: string,
-    width: number,
-    height: number
-  ): Promise<string> {
+  async function resizeImage(inputPath: string): Promise<string> {
     const outputPath = inputPath.replace(/(\.\w+)$/, "_resized$1");
-    await sharp(inputPath).resize(width, height).toFile(outputPath);
+    await sharp(inputPath)
+      .resize({
+        width: width,
+        height: height,
+        fit: "fill",
+      })
+      .toFile(outputPath);
     return outputPath;
   }
 
   // createGIF assumes that all files are of the same dimensions
   // which is handled in downloadFilesLocally
-  async function createGif(
-    algorithm: string,
-    localOutputPath: string,
-    files: string[],
-    intervalDuration: number
-  ) {
+  async function createGif(algorithm: string) {
     return new Promise<void>(async (resolve1, reject1) => {
       try {
-        // get the width and height of the first image
-        const [width, height] = await new Promise<[number, number]>(
-          (resolve2, reject2) => {
-            const image = new Image();
-            image.onload = () => resolve2([image.width, image.height]);
-            image.onerror = (error: any) => {
-              // on error reject promise with error and file name
-              const { basename, extension } = getNameAndExtensionFromUrl(
-                files[0]
-              );
-              reject2({
-                code: 400,
-                message: `Failed to load image ${basename + extension}`,
-                error,
-              });
-            };
-            // attempt to load image
-            image.src = files[0];
-          }
-        );
-
         const writeStream = createWriteStream(localOutputPath);
 
         // when stream closes GIF is created so resolve promise
@@ -149,7 +126,7 @@ export default async function handler(
 
         // draw an image for each file and add frame to encoder
         for (const file of files) {
-          await new Promise<void>((resolve3, reject3) => {
+          await new Promise<void>((resolve2, reject2) => {
             const image = new Image();
 
             const { basename, extension } = getNameAndExtensionFromUrl(file);
@@ -157,18 +134,18 @@ export default async function handler(
               const error = new Error(
                 `Image ${basename + extension} is taking too long to draw`
               );
-              reject3(error);
+              reject2(error);
             }, 5000); // 5 seconds timeout
 
             image.onload = () => {
               clearTimeout(timeout);
               ctx.drawImage(image, 0, 0);
               encoder.addFrame(ctx);
-              resolve3();
+              resolve2();
             };
             image.onerror = (error: any) => {
               clearTimeout(timeout);
-              reject3({
+              reject2({
                 code: 500,
                 message: `Error occured while drawing ${basename + extension}`,
                 error,
