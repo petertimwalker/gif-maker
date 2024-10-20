@@ -67,6 +67,7 @@ const Frames = ({ urls, setUrls }: FramesProps) => {
     <DndProvider backend={HTML5Backend}>
       <div className={styles.container}>
         <div className={styles.header}>Frames of GIF:</div>
+        <>Drag and drop to reorder frames!</>
         <div className={styles.imagesContainer}>
           {urls.map((url, index) => (
             <div key={index}>
