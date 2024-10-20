@@ -46,7 +46,7 @@ export default function GIFMaker() {
           </div>
           {urls.length > 0 && (
             <>
-              <Frames urls={urls} />
+              <Frames urls={urls} setUrls={setUrls} />
               <Preview
                 urls={urls}
                 intervalDuration={intervalDuration}
