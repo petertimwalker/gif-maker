@@ -27,6 +27,7 @@ export default async function handler(
   const gifFileName = `${basename}.gif`;
   const localOutputPath = makeTempFilePathFromUrl(gifFileName);
 
+  // create GIF
   try {
     await createGif("neuquant", localOutputPath, files, intervalDuration);
   } catch (error: any) {
@@ -34,40 +35,52 @@ export default async function handler(
     return res.status(error.code).json({ error: error.message });
   }
 
+  // upload the GIF to S3
   const uploadedUrl = await uploadFileFromLocalPath(
     localOutputPath,
     gifFileName
   );
 
+  // handle happy path
   if (uploadedUrl) {
     await cleanupLocalFiles([...files, localOutputPath]);
     return res.status(200).json({ gifUrl: uploadedUrl });
   }
 
-  return res.status(500).json({ error: "Internal server error" });
+  // handle upload failure
+  return res.status(500).json({ error: "GIF failed to upload" });
+
+  // helper functions
 
   async function cleanupLocalFiles(filePaths: string[]) {
-    const unlinkPromises = filePaths.map((filePath) =>
-      unlink(filePath).then(
-        () => console.info(`File deleted: ${filePath}`),
-        (error) =>
-          console.error(
-            `Failed to delete file: ${filePath}, error: ${error.message}`
-          )
-      )
-    );
+    const unlinkPromises = filePaths.map((filePath) => deleteFile(filePath));
     await Promise.allSettled(unlinkPromises);
   }
 
+  async function deleteFile(filePath: string) {
+    unlink(filePath).then(
+      () => console.info(`File deleted: ${filePath}`),
+      (error) =>
+        console.error(
+          `Failed to delete file: ${filePath}, error: ${error.message}`
+        )
+    );
+  }
+
+  // download all files locally and resize them
   async function downloadFilesLocally() {
     const files: string[] = [];
     for (const url of urls) {
       const localInputUrl = await downloadFileFromUrl(url);
+
+      // if the file was downloaded successfully, resize it accordingly
       if (localInputUrl) {
         const resizedImage = await resizeImage(localInputUrl, 100, 100);
         if (resizedImage) {
           files.push(resizedImage);
         }
+        // delete the original file
+        await deleteFile(localInputUrl);
       }
     }
     return files;
@@ -83,6 +96,8 @@ export default async function handler(
     return outputPath;
   }
 
+  // createGIF assumes that all files are of the same dimensions
+  // which is handled in downloadFilesLocally
   async function createGif(
     algorithm: string,
     localOutputPath: string,
@@ -91,13 +106,13 @@ export default async function handler(
   ) {
     return new Promise<void>(async (resolve1, reject1) => {
       try {
-        // Create a new GIF file
-        // find the width and height of the image
+        // get the width and height of the first image
         const [width, height] = await new Promise<[number, number]>(
           (resolve2, reject2) => {
             const image = new Image();
             image.onload = () => resolve2([image.width, image.height]);
             image.onerror = (error: any) => {
+              // on error reject promise with error and file name
               const { basename, extension } = getNameAndExtensionFromUrl(
                 files[0]
               );
@@ -107,6 +122,7 @@ export default async function handler(
                 error,
               });
             };
+            // attempt to load image
             image.src = files[0];
           }
         );
@@ -135,6 +151,7 @@ export default async function handler(
         for (const file of files) {
           await new Promise<void>((resolve3, reject3) => {
             const image = new Image();
+
             const { basename, extension } = getNameAndExtensionFromUrl(file);
             const timeout = setTimeout(() => {
               const error = new Error(
@@ -142,6 +159,7 @@ export default async function handler(
               );
               reject3(error);
             }, 5000); // 5 seconds timeout
+
             image.onload = () => {
               clearTimeout(timeout);
               ctx.drawImage(image, 0, 0);
@@ -161,7 +179,7 @@ export default async function handler(
         }
         encoder.finish();
       } catch (error) {
-        reject1(error);
+        reject1({ code: 500, message: "Failed to write GIF file", error });
       }
     });
   }

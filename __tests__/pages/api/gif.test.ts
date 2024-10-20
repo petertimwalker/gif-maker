@@ -56,6 +56,13 @@ jest.mock("fs", () => ({
   }),
 }));
 
+jest.mock("sharp", () => {
+  return jest.fn(() => ({
+    resize: jest.fn().mockReturnThis(),
+    toFile: jest.fn().mockResolvedValue(undefined),
+  }));
+});
+
 describe("GIF Endpoint", () => {
   it("should call the endpoint and receive a response", async () => {
     const { req, res } = createMocks<NextApiRequest, NextApiResponse>({
