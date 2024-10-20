@@ -22,6 +22,39 @@ const Preview = ({
     setIsRunning((prevIsRunning) => !prevIsRunning);
   };
 
+  const previewControls = () => {
+    return (
+      <div className="p-4 bg-gray-100 rounded-lg shadow-md">
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Set Interval (ms):
+        </label>
+        <input
+          type="range"
+          id="interval"
+          min="100"
+          max="1000"
+          step="10"
+          value={intervalDuration}
+          onChange={handleIntervalChange}
+          className="w-full mb-4"
+        />
+        <span className="block text-sm text-gray-700 mb-4">
+          {intervalDuration} ms
+        </span>
+        <button
+          onClick={toggleRunning}
+          className={`px-4 py-2 rounded-lg text-white ${
+            isRunning
+              ? "bg-red-500 hover:bg-red-600"
+              : "bg-green-500 hover:bg-green-600"
+          }`}
+        >
+          {isRunning ? "Stop" : "Start"}
+        </button>
+      </div>
+    );
+  };
+
   useEffect(() => {
     if (!isRunning) return;
 
@@ -35,20 +68,6 @@ const Preview = ({
   return (
     <div className={styles.container}>
       <div className={styles.header}>Preview of GIF:</div>
-      <div>
-        <label htmlFor="interval">Set Interval (ms): </label>
-        <input
-          type="range"
-          id="interval"
-          min="100"
-          max="1000"
-          step="10"
-          value={intervalDuration}
-          onChange={handleIntervalChange}
-        />
-        <span>{intervalDuration} ms</span>
-        <button onClick={toggleRunning}>{isRunning ? "Stop" : "Start"}</button>
-      </div>
       {urls.length > 0 && (
         <img
           className={styles.image}
@@ -56,6 +75,7 @@ const Preview = ({
           alt={`frame-${currentIndex}`}
         />
       )}
+      {previewControls()}
     </div>
   );
 };
