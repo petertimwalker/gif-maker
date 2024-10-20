@@ -21,6 +21,13 @@ jest.mock("@/components/Upload", () => {
     );
   };
 });
+jest.mock("react-dnd", () => ({
+  DndProvider: ({ children }: { children: React.ReactNode }) => (
+    <div>{children}</div>
+  ),
+  useDrag: () => [{ isDragging: false }, () => {}],
+  useDrop: () => [{ isOver: false }, () => {}],
+}));
 
 describe("GIFMaker", () => {
   it("renders the title", () => {
