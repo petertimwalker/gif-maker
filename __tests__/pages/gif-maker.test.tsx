@@ -28,6 +28,9 @@ jest.mock("react-dnd", () => ({
   useDrag: () => [{ isDragging: false }, () => {}],
   useDrop: () => [{ isOver: false }, () => {}],
 }));
+jest.mock("react-dnd-html5-backend", () => ({
+  HTML5BackendImpl: jest.fn(),
+}));
 
 describe("GIFMaker", () => {
   it("renders the title", () => {
