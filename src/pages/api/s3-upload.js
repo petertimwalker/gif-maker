@@ -1,11 +1,5 @@
 import { APIRoute, sanitizeKey } from "next-s3-upload";
 import { nanoid } from "nanoid";
-import {
-  accessKeyId,
-  secretAccessKey,
-  bucket,
-  region,
-} from "@/helpers/credentials";
 
 /*
  * The upload logic in this repo is handled by the next-s3-upload package
@@ -14,10 +8,10 @@ import {
  *
  */
 export default APIRoute.configure({
-  accessKeyId,
-  secretAccessKey,
-  bucket,
-  region,
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  bucket: process.env.AWS_BUCKET,
+  region: process.env.AWS_REGION,
   key(req, filename) {
     return `${nanoid(8)}-${sanitizeKey(filename)}`;
   },
