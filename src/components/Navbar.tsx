@@ -18,7 +18,7 @@ export default function Navbar() {
             Home
           </Link>
         </div>
-        <div
+        {/* <div
           className={
             router.pathname == "/grayscale"
               ? "bg-yellow-100 text-yellow-700 p-2 rounded"
@@ -31,7 +31,7 @@ export default function Navbar() {
           >
             Grayscale
           </Link>
-        </div>
+        </div> */}
         <div
           className={
             router.pathname == "/gif-maker"
