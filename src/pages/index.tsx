@@ -2,6 +2,9 @@ import Head from "next/head";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import styles from "@/styles/Home.module.css";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export default function Home() {
   return (
