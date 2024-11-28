@@ -16,10 +16,6 @@ export default function Home() {
           content="This is a application that helps you create GIFs"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link
-          rel="icon"
-          href="https://cdn-useast1.kapwing.com/static/TwE-favicon.ico"
-        />
       </Head>
       <Navbar />
       <main className={styles.main}>

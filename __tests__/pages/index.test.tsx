@@ -8,7 +8,7 @@ describe("Home", () => {
   it("renders the title", () => {
     render(<Home />);
     expect(
-      screen.getByText("Kapwing Interview Project by Peter Walker")
+      screen.getByText("AWS S3 Upload Project by Peter Walker")
     ).toBeInTheDocument();
   });
 });
